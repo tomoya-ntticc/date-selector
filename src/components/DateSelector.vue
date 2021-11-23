@@ -1,6 +1,26 @@
 <script setup lang="ts">
-import { reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { io, Socket } from "socket.io-client";
+import SwiperClass from "swiper";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import SwiperCore, { EffectCoverflow,Pagination } from 'swiper';
+import 'swiper/css';
+import "swiper/css/effect-coverflow"
+import "swiper/css/pagination"
+import '../style.css';
+
+SwiperCore.use([EffectCoverflow,Pagination]);
+
+const swiperRef = ref();
+
+const onSwiper = (swiper: SwiperClass) => {
+  console.log(swiper);
+  swiperRef.value = swiper;
+};
+const onSlideChange = (swiper: SwiperClass) => {
+  console.log("onSlideChange", swiperRef.value.activeIndex);
+  selectedTheMovie(store.files[swiperRef.value.activeIndex]);
+};
 
 const store = reactive({
   files: [""]
@@ -35,9 +55,24 @@ onMounted(() => {
 </script>
 
 <template>
-  <button v-on:click="requestTheMovieList">requestTheMovieList</button>
-  <ul>
-    <li v-for="(file, index) in store.files" :key="index">{{ file }}</li>
-  </ul>
-  <button v-on:click="selectedTheMovie('2021_08_27')">selectedTheMovie</button>
+  <swiper
+    :effect="'coverflow'"
+    :grabCursor="true"
+    :centeredSlides="true"
+    :slidesPerView="'auto'"
+    :coverflowEffect='{
+      "rotate": 30,
+      "stretch": 0,
+      "depth": 100,
+      "modifier": 1,
+      "slideShadows": true
+    }'
+    :pagination="true"
+    @swiper="onSwiper"
+    @slide-change="onSlideChange"
+  >
+    <swiper-slide v-for="(file, index) in store.files" :key="index">
+      <div>{{ file }}</div>
+    </swiper-slide>
+  </swiper>
 </template>
