@@ -35,10 +35,5 @@ body {
 
 .swiper-pagination-bullet
  {
-    /* background-color: #ffffff; */
     opacity: 0.5;
 }
-
-/* .swiper-pagination-bullet.swiper-pagination-bullet-active {
-    background-color: #ffffff;
-} */
